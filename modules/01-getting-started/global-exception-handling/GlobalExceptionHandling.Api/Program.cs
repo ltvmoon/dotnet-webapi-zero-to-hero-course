@@ -26,7 +26,11 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 // Add exception handling middleware early in the pipeline
-app.UseExceptionHandler();
+app.UseExceptionHandler(new ExceptionHandlerOptions
+{
+    SuppressDiagnosticsCallback = context =>
+        context.Exception is NotFoundException or BadRequestException
+});
 
 app.MapOpenApi();
 app.MapScalarApiReference();
